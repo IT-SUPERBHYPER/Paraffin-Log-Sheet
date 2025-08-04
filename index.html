@@ -167,6 +167,7 @@
             <div>
                 <label for="closingBowser" class="block text-sm font-medium mb-1">Closing Bowser</label>
                 <input type="number" id="closingBowser" step="0.01" min="0" required>
+                <p class="text-xs text-gray-400 mt-1">Bowser Diff: <b id="liveBowserDiff">0.00</b></p>
             </div>
             <div>
                 <label for="openingDipstick" class="block text-sm font-medium mb-1">Opening Dipstick</label>
@@ -175,6 +176,7 @@
             <div>
                 <label for="closingDipstick" class="block text-sm font-medium mb-1">Closing Dipstick</label>
                 <input type="number" id="closingDipstick" step="0.01" min="0" required>
+                <p class="text-xs text-gray-400 mt-1">Dip Diff: <b id="liveDipstickDiff">0.00</b></p>
             </div>
 
             <div>
@@ -287,6 +289,33 @@
         const recordsTableBody = document.querySelector('#recordsTable tbody');
         const noRecordsMessage = document.getElementById('noRecordsMessage');
 
+        // Get input elements for live calculation
+        const openingBowserInput = document.getElementById('openingBowser');
+        const closingBowserInput = document.getElementById('closingBowser');
+        const liveBowserDiffSpan = document.getElementById('liveBowserDiff');
+        const openingDipstickInput = document.getElementById('openingDipstick');
+        const closingDipstickInput = document.getElementById('closingDipstick');
+        const liveDipstickDiffSpan = document.getElementById('liveDipstickDiff');
+
+        function calculateLiveDifferences() {
+            const openingBowser = parseFloat(openingBowserInput.value) || 0;
+            const closingBowser = parseFloat(closingBowserInput.value) || 0;
+            const bowserDiff = closingBowser - openingBowser;
+            liveBowserDiffSpan.textContent = bowserDiff.toFixed(2);
+
+            const openingDipstick = parseFloat(openingDipstickInput.value) || 0;
+            const closingDipstick = parseFloat(closingDipstickInput.value) || 0;
+            const dipstickDiff = openingDipstick - closingDipstick;
+            liveDipstickDiffSpan.textContent = dipstickDiff.toFixed(2);
+        }
+
+        // Add event listeners for live calculation
+        openingBowserInput.addEventListener('input', calculateLiveDifferences);
+        closingBowserInput.addEventListener('input', calculateLiveDifferences);
+        openingDipstickInput.addEventListener('input', calculateLiveDifferences);
+        closingDipstickInput.addEventListener('input', calculateLiveDifferences);
+
+
         async function getLatestReadings() {
             if (!db) return null;
             const recordsCollection = collection(db, `artifacts/${appId}/public/data/paraffin_log_sheet`);
@@ -304,6 +333,8 @@
                 document.getElementById('openingBowser').value = latestRecord.closingBowser?.toFixed(2) || '';
                 document.getElementById('openingDipstick').value = latestRecord.closingDipstick?.toFixed(2) || '';
             }
+            // After setting initial values, calculate live differences
+            calculateLiveDifferences();
         }
         
         logForm.addEventListener('submit', async (e) => {
