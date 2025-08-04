@@ -185,10 +185,7 @@
                 <label for="countedBy" class="block text-sm font-medium mb-1">Counted By</label>
                 <input type="text" id="countedBy" required>
             </div>
-            <div>
-                <label for="checkedBy" class="block text-sm font-medium mb-1">Checked By</label>
-                <input type="text" id="checkedBy" required>
-            </div>
+            
             <div>
                 <label for="remark" class="block text-sm font-medium mb-1">Remark</label>
                 <input type="text" id="remark">
@@ -217,7 +214,6 @@
                         <th>Dip Diff</th>
                         <th>SOH</th>
                         <th>Counted By</th>
-                        <th>Checked By</th>
                         <th>Remark</th>
                     </tr>
                 </thead>
@@ -336,7 +332,6 @@
                 dipstickDiff: openingDipstick - closingDipstick,
                 soh: parseFloat(document.getElementById('soh').value),
                 countedBy: document.getElementById('countedBy').value.trim(),
-                checkedBy: document.getElementById('checkedBy').value.trim(),
                 remark: document.getElementById('remark').value.trim(),
                 timestamp: serverTimestamp()
             };
@@ -380,7 +375,6 @@
                     <td><b>${record.dipstickDiff?.toFixed(2)}</b></td>
                     <td>${record.soh?.toFixed(2)}</td>
                     <td>${record.countedBy}</td>
-                    <td>${record.checkedBy}</td>
                     <td>${record.remark}</td>
                 `;
             });
@@ -393,12 +387,12 @@
         const confirmationModal = document.getElementById('confirmationModal');
 
         function getExportData() {
-            const headers = ["Date", "Opening Bowser", "Closing Bowser", "Bowser Diff", "Opening Dipstick", "Closing Dipstick", "Dip Diff", "SOH", "Counted By", "Checked By", "Remark"];
+            const headers = ["Date", "Opening Bowser", "Closing Bowser", "Bowser Diff", "Opening Dipstick", "Closing Dipstick", "Dip Diff", "SOH", "Counted By", "Remark"];
             const data = currentLogRecords.map(r => [
                 r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString() : 'N/A',
                 r.openingBowser?.toFixed(2), r.closingBowser?.toFixed(2), r.bowserDiff?.toFixed(2),
                 r.openingDipstick?.toFixed(2), r.closingDipstick?.toFixed(2), r.dipstickDiff?.toFixed(2),
-                r.soh?.toFixed(2), r.countedBy, r.checkedBy, `"${r.remark.replace(/"/g, '""')}"`
+                r.soh?.toFixed(2), r.countedBy, `"${r.remark.replace(/"/g, '""')}"`
             ]);
             return { headers, data };
         }
